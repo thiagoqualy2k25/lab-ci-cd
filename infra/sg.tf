@@ -18,7 +18,7 @@ resource "aws_security_group" "allow_inbound" {
 
 
 resource "aws_vpc_security_group_ingress_rule" "web" {
-  security_group_id = aws_security_group.this.id
+  security_group_id = aws_security_group.allow_inbound.id
 
   cidr_ipv4   = "0.0.0.0/0"
   from_port   = 80
@@ -28,7 +28,7 @@ resource "aws_vpc_security_group_ingress_rule" "web" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "container" {
-  security_group_id = aws_security_group.this.id
+  security_group_id = aws_security_group.allow_inbound.id
 
   cidr_ipv4   = "0.0.0.0/0"
   from_port   = 8000
