@@ -35,8 +35,8 @@
         }
     ],
     "family": "ci-cd-app",
-    "taskRoleArn": "arn:aws:iam::526926919628:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
-    "executionRoleArn": "arn:aws:iam::526926919628:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+    "taskRoleArn": "arn:aws:iam::526926919628:role/LabRole",
+    "executionRoleArn": "arn:aws:iam::526926919628:role/LabRole",
     "networkMode": "awsvpc",
     "volumes": [],
     "placementConstraints": [],
