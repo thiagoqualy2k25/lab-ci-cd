@@ -99,17 +99,17 @@ jobs:
 
       - name: Create Amazon ECS Service (if not exists)
         run: |
-          SERVICE_EXISTS=$(aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query "services[0].serviceName" --output text)
+          SERVICE_EXISTS=$(aws ecs describe-services --cluster $ECS_CLUSTER --services $ECS_SERVICE --query "services[0].serviceName" --output text)
           if [ "$SERVICE_EXISTS" == "None" ]; then
             echo "Creating ECS Service..."
             aws ecs create-service \
-              --cluster ${{ env.ECS_CLUSTER }} \
-              --service-name ${{ env.ECS_SERVICE }} \
+              --cluster $ECS_CLUSTER \
+              --service-name $ECS_SERVICE \
               --task-definition ${{ steps.task-def.outputs.task-definition }} \
               --desired-count 1 \
               --launch-type FARGATE \
-              --network-configuration "awsvpcConfiguration={subnets=${{ env.SUBNETS }},securityGroups=${{ env.SECURITY_GROUPS }},assignPublicIp=ENABLED}" \
-              --load-balancers "targetGroupArn=${{ env.TARGET_GROUP_ARN }},containerName=${{ env.IMAGE_NAME }},containerPort=8000" \
+              --network-configuration "awsvpcConfiguration={subnets=[\"$SUBNETS\"],securityGroups=[\"$SECURITY_GROUPS\"],assignPublicIp=\"ENABLED\"}" \
+              --load-balancers "targetGroupArn=$TARGET_GROUP_ARN,containerName=${{ env.IMAGE_NAME }},containerPort=8000" \
               --deployment-controller "type=ECS"
           else
             echo "ECS Service already exists."
