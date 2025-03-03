@@ -8,7 +8,7 @@
                 {
                     "name": "ci-cd-app-80-tcp",
                     "containerPort": 8000,
-                    "hostPort": 80,
+                    "hostPort": 8000,
                     "protocol": "tcp",
                     "appProtocol": "http"
                 }
@@ -22,7 +22,7 @@
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                    "awslogs-group": "/ecs/app-ci-cdv2",
+                    "awslogs-group": "/ecs/ci-cd-app",
                     "mode": "non-blocking",
                     "awslogs-create-group": "true",
                     "max-buffer-size": "25m",
@@ -34,7 +34,7 @@
             "systemControls": []
         }
     ],
-    "family": "app-ci-cdv2",
+    "family": "ci-cd-app",
     "taskRoleArn": "arn:aws:iam::610212613029:role/LabRole",
     "executionRoleArn": "arn:aws:iam::610212613029:role/LabRole",
     "networkMode": "awsvpc",
