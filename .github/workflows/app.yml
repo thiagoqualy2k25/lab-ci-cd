@@ -97,7 +97,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
-          task-definition: ./ecs-task-definition.json
+          task-definition: ./app/ecs-task-definition.json
           container-name: ${{ env.IMAGE_NAME }}
           image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_APP }}
 
@@ -110,7 +110,7 @@ jobs:
       - name: ECS Service
         uses: scribd/amazon-ecs-service-action@v1
         with:
-          spec-file: ./service-spec.json
+          spec-file: ./app/service-spec.json
           spec: |
             {
               "taskDefinition": "${{ steps.task-definition.outputs.task-definition-arn }}"
