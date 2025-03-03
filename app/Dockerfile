@@ -5,7 +5,8 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN apk add --no-cache curl \
+    && pip install --trusted-host pypi.python.org -r requirements.txt
 
 EXPOSE 8000
 
