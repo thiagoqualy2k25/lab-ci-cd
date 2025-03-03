@@ -11,7 +11,7 @@
     "desiredCount": 2,
     "enableECSManagedTags": true,
     "enableExecuteCommand": false,
-    "launchType": "EC2",
+    "launchType": "FARGATE",
     "loadBalancers": [],
     "networkConfiguration": {
       "awsvpcConfiguration": {
