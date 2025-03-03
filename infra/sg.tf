@@ -5,6 +5,7 @@ resource "aws_security_group" "allow_inbound" {
   description = "Allow inbound traffic"
 
   ingress {
+    description = "Acesso Web"
     from_port   = 80
     to_port     = 80
     protocol    = "TCP"
@@ -12,6 +13,7 @@ resource "aws_security_group" "allow_inbound" {
   }
 
   ingress {
+    description = "Comunicação com o container"
     from_port   = 8000
     to_port     = 8000
     protocol    = "TCP"
