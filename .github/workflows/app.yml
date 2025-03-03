@@ -8,7 +8,7 @@ on:
 env:
   IMAGE_NAME: ci-cd-app
   TAG_APP: v1.0.0
-  ECS_SERVICE: app-ci-cd-service
+  ECS_SERVICE: cicd-app-service
   ECS_CLUSTER: app-prod-cluster
   SUBNETS: "subnet-0fbf2767834e01e3c,subnet-0803c20d0114bae14,subnet-06bf008b57618c9c8"
   SECURITY_GROUPS: "sg-0f04d098edcd6ea3b"
