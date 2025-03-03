@@ -8,11 +8,8 @@ on:
 env:
   IMAGE_NAME: ci-cd-app
   TAG_APP: v1.0.0
-  ECS_SERVICE: cicd-app-service
+  ECS_SERVICE: app-ci-cd-service
   ECS_CLUSTER: app-prod-cluster
-  SUBNETS: "subnet-0fbf2767834e01e3c,subnet-0803c20d0114bae14,subnet-06bf008b57618c9c8"
-  SECURITY_GROUPS: "sg-0f04d098edcd6ea3b"
-  TARGET_GROUP_ARN: "arn:aws:elasticloadbalancing:us-east-1:526926919628:targetgroup/app-prod-tg/a830274bde7d1224"
 
 jobs:
   Build:
@@ -97,30 +94,22 @@ jobs:
           container-name: ${{ env.IMAGE_NAME }}
           image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_APP }}
 
-      - name: Register ECS Task Definition
-        run: |
-          TASK_DEFINITION_ARN=$(aws ecs register-task-definition \
-            --cli-input-json file://${{ steps.task-def.outputs.task-definition }} \
-            --query "taskDefinition.taskDefinitionArn" --output text)
-          echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> $GITHUB_ENV
+      - name: Register Task Definition
+        id: task-definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
 
-      - name: Create Amazon ECS Service (if not exists)
-        run: |
-          SERVICE_EXISTS=$(aws ecs describe-services --cluster $ECS_CLUSTER --services $ECS_SERVICE --query "services[0].serviceName" --output text)
-          if [ "$SERVICE_EXISTS" == "None" ]; then
-            echo "Creating ECS Service..."
-            aws ecs create-service \
-              --cluster $ECS_CLUSTER \
-              --service-name $ECS_SERVICE \
-              --task-definition $TASK_DEFINITION_ARN \
-              --desired-count 1 \
-              --launch-type FARGATE \
-              --network-configuration "awsvpcConfiguration={subnets=[\"$SUBNETS\"],securityGroups=[\"$SECURITY_GROUPS\"],assignPublicIp=\"ENABLED\"}" \
-              --load-balancers "targetGroupArn=$TARGET_GROUP_ARN,containerName=${{ env.IMAGE_NAME }},containerPort=8000" \
-              --deployment-controller "type=ECS"
-          else
-            echo "ECS Service already exists."
-          fi
+      - name: ECS Service
+        uses: scribd/amazon-ecs-service-action@v1
+        with:
+          spec-file: ./app/service-spec.json
+          spec: |
+            {
+              "taskDefinition": "${{ steps.task-definition.outputs.task-definition-arn }}"
+            }
+          force-new-deployment: false
+          wait-until-deployment-complete: true
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a

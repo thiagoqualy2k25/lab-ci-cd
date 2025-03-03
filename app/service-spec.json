@@ -1,0 +1,42 @@
+{
+    "deploymentConfiguration": {
+      "deploymentCircuitBreaker": {
+        "enable": true,
+        "rollback": false
+      },
+      "maximumPercent": 200,
+      "minimumHealthyPercent": 32
+    },
+    "deploymentController": "ECS",
+    "desiredCount": 2,
+    "enableECSManagedTags": true,
+    "enableExecuteCommand": false,
+    "launchType": "EC2",
+    "loadBalancers": [],
+    "networkConfiguration": {
+      "awsvpcConfiguration": {
+        "subnets": [
+          "subnet-0fbf2767834e01e3c",
+          "subnet-0803c20d0114bae14",
+          "subnet-06bf008b57618c9c8"
+        ],
+        "securityGroups": [
+          "sg-0f04d098edcd6ea3b"
+        ],
+        "assignPublicIp": "DISABLED"
+      }
+    },
+    "placementConstraints": [],
+    "placementStrategy": [],
+    "schedulingStrategy": "REPLICA",
+    "serviceName": "cicd-app-service",
+    "serviceRegistries": [],
+    "tags": [
+      {
+        "key": "my-key",
+        "value": "my-value"
+      }
+    ],
+    "taskDefinition": "arn:aws:ecs:us-east-1:1234567890:task-definition/task-definition-family:2",
+    "cluster": "app-prod-cluster"
+}
