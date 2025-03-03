@@ -23,12 +23,12 @@ jobs:
 
     steps:
       - name: Download do Repositório
-        uses: actions/checkout@v3       # https://github.com/actions/checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Python
-        uses: actions/setup-python@v4   # https://github.com/actions/setup-python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
@@ -72,8 +72,15 @@ jobs:
           docker image push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_APP }}
 
   Deploy:
+
     needs: Build
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: app
+
     steps:
       - name: Download do Repositório
         uses: actions/checkout@v4
@@ -90,7 +97,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
-          task-definition: ./app/ecs-task-definition.json
+          task-definition: ecs-task-definition.json
           container-name: ${{ env.IMAGE_NAME }}
           image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_APP }}
 
@@ -103,7 +110,7 @@ jobs:
       - name: ECS Service
         uses: scribd/amazon-ecs-service-action@v1
         with:
-          spec-file: ./app/service-spec.json
+          spec-file: service-spec.json
           spec: |
             {
               "taskDefinition": "${{ steps.task-definition.outputs.task-definition-arn }}"
