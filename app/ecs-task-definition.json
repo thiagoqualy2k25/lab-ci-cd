@@ -1,0 +1,53 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "ci-cd-app",
+            "image": "gersontpc/ci-cd-app:v1.0.0",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "ci-cd-app-80-tcp",
+                    "containerPort": 8000,
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/app-ci-cdv2",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "app-ci-cdv2",
+    "taskRoleArn": "arn:aws:iam::610212613029:role/LabRole",
+    "executionRoleArn": "arn:aws:iam::610212613029:role/LabRole",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "512",
+    "memory": "1024",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "tags": []
+}

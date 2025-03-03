@@ -26,7 +26,7 @@ resource "aws_lb_listener" "this" {
 # Crie um target group
 resource "aws_lb_target_group" "this" {
   name        = format("%s-tg", var.cluster_name)
-  port        = 80
+  port        = 8000
   protocol    = "TCP"
   vpc_id      = var.vpc_id
   target_type = "ip"
