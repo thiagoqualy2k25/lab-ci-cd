@@ -2,11 +2,15 @@ data "aws_lb_target_group" "this" {
   name = "app-prod-tg"
 }
 
-data "aws_security_groups" "selected" {
+data "aws_security_groups" "this" {
   filter {
     name   = "tag:Name"
     values = ["app-prod-sg"]
   }
+}
+
+data "aws_ecs_cluster" "this" {
+  cluster_name = "app-prod"
 }
 
 resource "aws_ecs_service" "this" {
@@ -17,8 +21,8 @@ resource "aws_ecs_service" "this" {
   launch_type     = "FARGATE"
   availability_zone_rebalancing = "ENABLED"
   network_configuration {
-    subnets          = var.subnets
-    security_groups  = var.security_groups
+    subnets          = var.subnets_id
+    security_groups  = ["${data.aws_security_groups.this.id}"]
     assign_public_ip = true
   }
 
