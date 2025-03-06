@@ -1,7 +1,7 @@
 variable "cluster_name" {
   description = "Nome do cluster ECS"
   type        = string
-  default = "app-prod"
+  default = "app-prod-cluster"
 }
 
 variable "desired_count" {
