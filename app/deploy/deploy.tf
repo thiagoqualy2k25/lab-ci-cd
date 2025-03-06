@@ -19,10 +19,9 @@ resource "aws_ecs_service" "this" {
   availability_zone_rebalancing = "ENABLED"
   network_configuration {
     subnets          = var.subnets_id
-    security_groups  = ["${data.aws_security_groups.this.id}"]
+    security_groups  = data.aws_security_groups.this.id
     assign_public_ip = true
   }
-
 
   load_balancer {
     target_group_arn = data.aws_lb_target_group.this.arn
