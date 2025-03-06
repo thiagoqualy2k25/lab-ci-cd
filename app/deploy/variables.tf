@@ -19,3 +19,9 @@ variable "vpc_id" {
   description = "VPC ID"
   type        = string
 }
+
+variable "target_group_arn" {
+  description = "Target Group ARN"
+  type        = string
+}
+}

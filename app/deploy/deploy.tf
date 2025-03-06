@@ -24,14 +24,14 @@ resource "aws_ecs_service" "this" {
 
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.foo.arn
+    target_group_arn = data.aws_lb_target_group.this.arn
     container_name   = "ci-cd-app"
     container_port   = 8000
   }
 
 }
 
-resource "aws_clowdwatch_log_group" "this" {
+resource "aws_cloudwatch_log_group" "this" {
   name              = "/ecs/ci-cd-app"
   retention_in_days = 7
 }
