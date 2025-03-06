@@ -14,3 +14,9 @@ variable "subnets_id" {
   description = "Subnets IDs"
   type        = list(string)
 }
+
+variable "lb_name" {
+  description = "Load Balancer Name"
+  type        = string
+  default     = "app-prod-nlb"
+}

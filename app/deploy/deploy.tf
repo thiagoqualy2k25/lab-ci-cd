@@ -9,6 +9,9 @@ data "aws_security_groups" "this" {
   }
 }
 
+data "aws_lb" "this" {
+  name = var.lb_name
+}
 
 resource "aws_ecs_service" "this" {
   name            = "app-service"
