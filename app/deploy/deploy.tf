@@ -10,7 +10,7 @@ data "aws_security_groups" "this" {
 }
 
 data "aws_ecs_cluster" "this" {
-  cluster_name = "app-prod"
+  cluster_name = "app-prod-cluster"
 }
 
 resource "aws_ecs_service" "this" {
