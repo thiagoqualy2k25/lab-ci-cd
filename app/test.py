@@ -15,4 +15,4 @@ class Test(unittest.TestCase):
 
     def test_conteudo(self):
         # verifica o retorno do conteudo da pagina
-        self.assertEqual(self.result.data.decode('utf-8'), "Continuous Integration and Continuous Delivery")
+        self.assertEqual(self.result.data.decode('utf-8'), "Continuous Integration and Continuous Delivery & Deployment")
