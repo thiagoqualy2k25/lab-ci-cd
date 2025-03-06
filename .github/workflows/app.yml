@@ -12,6 +12,7 @@ env:
   TAG_APP: v1.0.0
   ECS_SERVICE: app-service
   ECS_CLUSTER: app-prod-cluster
+  ENVIRONMENT: prod
 
 jobs:
   Build:
@@ -119,11 +120,12 @@ jobs:
             echo "terraform {
               backend \"s3\" {
                 bucket   = \"${{ secrets.AWS_ACCOUNT_ID }}-tfstate\"
-                key      = \"${{ secrets.AWS_ACCOUNT_ID }}/"${{ env.ENVIRONMENT }}-app.tfstate"\"
+                key      = \"app-${{ env.ENVIRONMENT }}.tfstate\"
                 region   = \"${{ vars.AWS_REGION }}\"
               }
             }" >> provider.tf
             cat provider.tf
+        working-directory: ./app/deploy
 
       - name: Terraform | Initialize backend
         run: terraform init
