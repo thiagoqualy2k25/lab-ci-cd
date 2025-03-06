@@ -114,6 +114,7 @@ jobs:
           spec: |
             {
               "taskDefinition": "${{ steps.task-definition.outputs.task-definition-arn }}"
+              "deploymentController": "ECS"
             }
           force-new-deployment: false
           wait-until-deployment-complete: true
