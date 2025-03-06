@@ -14,7 +14,7 @@ data "aws_lb" "this" {
 }
 
 resource "aws_ecs_service" "this" {
-  name            = "app-service-v1"
+  name            = "app-service"
   task_definition = "ci-cd-app"
   cluster         = var.cluster_name
   desired_count   = var.desired_count
