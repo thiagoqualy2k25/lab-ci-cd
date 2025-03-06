@@ -10,7 +10,7 @@ env:
   TF_VERSION: 1.10.5
   IMAGE_NAME: ci-cd-app
   TAG_APP: v1.0.0
-  ECS_SERVICE: app-service
+  ECS_SERVICE: app-service-v1
   ECS_CLUSTER: app-prod-cluster
   ENVIRONMENT: prod
 
