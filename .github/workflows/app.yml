@@ -6,9 +6,11 @@ on:
       - main
 
 env:
+  DESTROY: false
+  TF_VERSION: 1.10.5
   IMAGE_NAME: ci-cd-app
   TAG_APP: v1.0.0
-  ECS_SERVICE: app-ci-cd-service
+  ECS_SERVICE: app-service
   ECS_CLUSTER: app-prod-cluster
 
 jobs:
@@ -97,7 +99,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
-          task-definition: ./app/ecs-task-definition.json
+          task-definition: ./app/deploy/ecs-task-definition.json
           container-name: ${{ env.IMAGE_NAME }}
           image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_APP }}
 
@@ -107,19 +109,40 @@ jobs:
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
 
-      - name: ECS Service
-        uses: scribd/amazon-ecs-service-action@v1
+      - name: Terraform | Setup
+        uses: hashicorp/setup-terraform@v3
         with:
-          spec-file: ./app/service-spec.json
-          spec: |
-            {
-              "taskDefinition": "${{ steps.task-definition.outputs.task-definition-arn }}"
-              "deploymentController": "ECS"
-            }
-          force-new-deployment: false
-          wait-until-deployment-complete: true
+          terraform_version: ${{ env.TF_VERSION }}
 
-      - name: Deploy Amazon ECS task definition
+      - name: Terraform | Set up statefile S3 Bucket for Backend
+        run: |
+            echo "terraform {
+              backend \"s3\" {
+                bucket   = \"${{ secrets.AWS_ACCOUNT_ID }}-tfstate\"
+                key      = \"${{ secrets.AWS_ACCOUNT_ID }}/"${{ env.ENVIRONMENT }}-app.tfstate"\"
+                region   = \" ${{ vars.AWS_REGION }}\"
+              }
+            }" >> provider.tf
+            cat provider.tf
+
+      - name: Terraform | Initialize backend
+        run: terraform init
+
+      - name: Terraform | Check Syntax IaC Code
+        run: terraform validate
+
+      - name: Terraform | Plan
+        run: terraform plan -out tfplan.binary
+
+      - name: Terraform Destroy
+        if: env.DESTROY == 'true'
+        run: terraform destroy -auto-approve -input=false
+
+      - name: Terraform Creating and Update
+        if: env.DESTROY != 'true'
+        run: terraform apply -auto-approve -input=false
+
+      - name: Deploy App in Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
